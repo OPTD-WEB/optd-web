@@ -1,22 +1,50 @@
-# ========================
-# Node.js / React / Tailwind
-# ========================
-node_modules/
+############################
+# Environment Variables
+############################
 .env
+.env.*
 
-# ========================
-# Java compiled class files
-# ========================
-*.class
+############################
+# Eclipse / IDE Settings
+############################
+.classpath
+.project
+.settings/
+.apt_generated/
+.factorypath
 
-# ========================
+############################
+# Maven / Gradle
+############################
+/target/
+/build/
+
+############################
+# OS Files
+############################
+.DS_Store
+Thumbs.db
+
+############################
 # Logs
-# ========================
+############################
 *.log
 
-# ========================
-# IDE / OS files
-# ========================
-.vscode/
+############################
+# Node / Front-End Tools
+############################
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+############################
+# JetBrains (IntelliJ)
+############################
 .idea/
-.DS_Store
+*.iml
+
+############################
+# Webapp Build Caches
+############################
+src/main/webapp/assets/.cache/
