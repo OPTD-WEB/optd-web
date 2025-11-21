@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -10,21 +9,36 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        /* TOP20 순위 번호 블러 효과 */
-        .rank-blur-1 { position: absolute; font-size: 90px; font-weight: 900; color: rgba(255,255,255,0.2); transform: translate(6px, 6px);}
-        .rank-blur-2 { position: absolute; font-size: 90px; font-weight: 900; color: rgba(255,255,255,0.15); transform: translate(3px, 3px);}
-        .rank-blur-3 { position: absolute; font-size: 90px; font-weight: 900; color: rgba(255,255,255,0.1);}
-        .rank-main { position: absolute; font-size: 90px; font-weight: 900; color: white;}
+        /* 랭킹 숫자 위치 조정 (왼쪽 중앙, 이미지와 살짝 떨어지도록) */
+        .rank-number { 
+            position: absolute; 
+            top: 50%; 
+            left: -20px; /* 이미지 왼쪽에서 살짝 떨어진 거리 */
+            transform: translateY(-50%); 
+            z-index: 30; 
+            height: 100px; 
+            width: 80px; 
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .rank-number span { 
+            font-size: 80px; 
+            font-weight: 900; 
+            line-height: 1; 
+            color: white; 
+            margin-left: 20px; /* 숫자와 이미지 간 간격 */
+        }
 
-        /* CSS 추가: 스크롤 애니메이션 및 스크롤바 숨기기 */
+        /* 스크롤 캐러셀 */
         .hero-carousel, .ranking-carousel, .content-carousel {
-            scroll-behavior: smooth; /* 부드러운 스크롤 애니메이션 */
-            overflow-x: scroll; /* 가로 스크롤 가능하게 설정 */
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+            scroll-behavior: smooth;
+            overflow-x: scroll;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
         .hero-carousel::-webkit-scrollbar, .ranking-carousel::-webkit-scrollbar, .content-carousel::-webkit-scrollbar {
-            display: none; /* Chrome, Safari and Opera 스크롤바 숨기기 */
+            display: none;
         }
     </style>
 </head>
@@ -38,44 +52,23 @@
         </div>
 
         <div class="hero-carousel-wrapper relative w-full">
-            <div class="hero-carousel flex gap-4 h-[400px]">
-                <% for(int i=0;i<7;i++) { %>
-                    <div class="hero-card relative min-w-[400px] h-[380px] rounded-xl overflow-hidden cursor-pointer transition-transform duration-300 hover:scale-[1.02]">
-                        <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=600&h=380&fit=crop" alt="콘텐츠 <%=i+1%>" class="w-full h-full object-cover">
-                        <div class="hero-card-overlay absolute bottom-0 left-0 right-0 h-full bg-gradient-to-t from-[rgba(0,0,0,0.8)] via-[rgba(0,0,0,0)] to-[rgba(0,0,0,0)]"></div>
-                        <h3 class="absolute bottom-4 left-4 text-lg font-medium z-10">콘텐츠 <%=i+1%></h3>
-                    </div>
-                <% } %>
-            </div>
+            <div id="heroCarousel" class="hero-carousel flex gap-4 h-[600px]"></div>
 
-            <button class="carousel-nav-btn left absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-[rgba(0,0,0,0.5)] rounded-full left-4 flex items-center justify-center z-10" data-carousel-target=".hero-carousel" data-slide-direction="prev">◀</button>
-            <button class="carousel-nav-btn right absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-[rgba(0,0,0,0.5)] rounded-full right-4 flex items-center justify-center z-10" data-carousel-target=".hero-carousel" data-slide-direction="next">▶</button>
+            <button class="carousel-nav-btn left absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-[rgba(0,0,0,0.5)] rounded-full left-4 flex items-center justify-center z-10" data-carousel-target="#heroCarousel" data-slide-direction="prev">◀</button>
+            <button class="carousel-nav-btn right absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-[rgba(0,0,0,0.5)] rounded-full right-4 flex items-center justify-center z-10" data-carousel-target="#heroCarousel" data-slide-direction="next">▶</button>
         </div>
     </section>
 
     <section class="section ranking-section px-4 py-12 max-w-[1920px] mx-auto">
         <div class="section-header flex justify-between items-center mb-4 mt-8">
-            <h2 class="text-[28px] lg:text-[28px] font-bold">이번주 TOP 20</h2>
+            <h2 class="text-[28px] lg:text-[28px] font-bold">이번 주 인기작 TOP 20</h2>
         </div>
 
         <div class="ranking-carousel-wrapper relative w-full">
-            <div class="ranking-carousel grid grid-rows-3 grid-flow-col gap-6 px-2">
-                <% for(int i=1;i<=20;i++) { %>
-                    <div class="ranking-card relative w-[300px] h-[160px] rounded-xl overflow-hidden shadow-2xl shadow-[rgba(0,0,0,0.25)] cursor-pointer flex-shrink-0">
-                        <div class="rank-number absolute top-[73.5px] left-0 z-10">
-                            <span class="rank-blur-1"><%=i%></span>
-                            <span class="rank-blur-2"><%=i%></span>
-                            <span class="rank-blur-3"><%=i%></span>
-                            <span class="rank-main"><%=i%></span>
-                        </div>
-                        <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300&h=170&fit=crop" alt="Rank <%=i%>" class="w-full h-full object-cover">
-                        <div class="ranking-overlay absolute bottom-0 left-0 right-0 h-full bg-gradient-to-t from-[rgba(0,0,0,0.6)] via-[rgba(0,0,0,0)] to-[rgba(0,0,0,0)]"></div>
-                    </div>
-                <% } %>
-            </div>
+            <div id="rankingCarousel" class="ranking-carousel grid grid-rows-2 grid-flow-col gap-4 px-2 h-[600px]"></div>
 
-            <button class="carousel-nav-btn left absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-[rgba(0,0,0,0.5)] rounded-full left-4 flex items-center justify-center z-10" data-carousel-target=".ranking-carousel" data-slide-direction="prev">◀</button>
-            <button class="carousel-nav-btn right absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-[rgba(0,0,0,0.5)] rounded-full right-4 flex items-center justify-center z-10" data-carousel-target=".ranking-carousel" data-slide-direction="next">▶</button>
+            <button class="carousel-nav-btn left absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-[rgba(0,0,0,0.5)] rounded-full left-4 flex items-center justify-center z-10" data-carousel-target="#rankingCarousel" data-slide-direction="prev">◀</button>
+            <button class="carousel-nav-btn right absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-[rgba(0,0,0,0.5)] rounded-full right-4 flex items-center justify-center z-10" data-carousel-target="#rankingCarousel" data-slide-direction="next">▶</button>
         </div>
     </section>
 
@@ -85,52 +78,167 @@
         </div>
 
         <div class="content-carousel-wrapper relative w-full">
-            <div class="content-carousel flex gap-4">
-                <% for(int i=1;i<=6;i++) { %>
-                    <div class="content-card min-w-[300px] h-[160px] rounded-lg overflow-hidden cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300&h=170&fit=crop" alt="영화 <%=i%>" class="w-full h-full object-cover">
-                    </div>
-                <% } %>
-            </div>
+            <div id="contentCarousel" class="content-carousel flex gap-4"></div>
 
-            <button class="carousel-nav-btn left absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-[rgba(0,0,0,0.5)] rounded-full left-4 flex items-center justify-center z-10" data-carousel-target=".content-carousel" data-slide-direction="prev">◀</button>
-            <button class="carousel-nav-btn right absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-[rgba(0,0,0,0.5)] rounded-full right-4 flex items-center justify-center z-10" data-carousel-target=".content-carousel" data-slide-direction="next">▶</button>
+            <button class="carousel-nav-btn left absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-[rgba(0,0,0,0.5)] rounded-full left-4 flex items-center justify-center z-10" data-carousel-target="#contentCarousel" data-slide-direction="prev">◀</button>
+            <button class="carousel-nav-btn right absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-[rgba(0,0,0,0.5)] rounded-full right-4 flex items-center justify-center z-10" data-carousel-target="#contentCarousel" data-slide-direction="next">▶</button>
         </div>
     </section>
 
 </main>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const navButtons = document.querySelectorAll('.carousel-nav-btn');
-        const scrollAmount = 500; // 한 번 클릭 시 스크롤 이동량 (픽셀)
+document.addEventListener('DOMContentLoaded', function() {
+    const carouselNavButtons = document.querySelectorAll('.carousel-nav-btn');
+    const scrollAmount = 500;
 
-        navButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const targetSelector = this.getAttribute('data-carousel-target');
-                const direction = this.getAttribute('data-slide-direction');
-                
-                const carousel = document.querySelector(targetSelector);
-                
-                if (!carousel) {
-                    console.error('Target carousel not found:', targetSelector);
-                    return;
-                }
+    carouselNavButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetSelector = this.getAttribute('data-carousel-target');
+            const direction = this.getAttribute('data-slide-direction');
+            const carousel = document.querySelector(targetSelector);
+            if (!carousel) return;
 
-                let newScrollLeft;
-                if (direction === 'next') {
-                    newScrollLeft = carousel.scrollLeft + scrollAmount;
-                } else if (direction === 'prev') {
-                    newScrollLeft = carousel.scrollLeft - scrollAmount;
-                }
+            const newScrollLeft = direction === 'next' 
+                ? carousel.scrollLeft + scrollAmount 
+                : carousel.scrollLeft - scrollAmount;
 
-                carousel.scrollTo({
-                    left: newScrollLeft,
-                    behavior: 'smooth'
-                });
-            });
+            carousel.scrollTo({ left: newScrollLeft, behavior: 'smooth' });
         });
     });
+
+    const API_URL = '/optd-web/api/main';
+
+    async function fetchAndRenderContents() {
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
+
+            renderTop7(data.top7 || []);
+            renderTop20(data.top20 || []);
+            renderRecommendations(data.recommendations || []);
+        } catch (error) {
+            console.error('콘텐츠 불러오기 실패:', error);
+            document.getElementById('heroCarousel').innerHTML = '<p class="text-red-500 p-4">콘텐츠를 불러오는 데 실패했습니다. (TOP 7)</p>';
+            document.getElementById('rankingCarousel').innerHTML = '<p class="text-red-500 p-4">콘텐츠를 불러오는 데 실패했습니다. (TOP 20)</p>';
+            document.getElementById('contentCarousel').innerHTML = '<p class="text-red-500 p-4">콘텐츠를 불러오는 데 실패했습니다. (추천)</p>';
+        }
+    }
+
+    function renderTop7(contents) {
+        const container = document.getElementById('heroCarousel');
+        container.innerHTML = '';
+
+        if (!contents || contents.length === 0) {
+            container.innerHTML = '<p class="text-gray-400 p-4">오늘의 TOP 7 콘텐츠가 없습니다.</p>';
+            return;
+        }
+
+        contents.forEach(content => {
+            const imgUrl = content.imageUrl || 'https://via.placeholder.com/400x600?text=No+Image';
+
+            const card = document.createElement('div');
+            card.className = 'hero-card relative min-w-[400px] h-[600px] rounded-xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform duration-300';
+
+            const img = document.createElement('img');
+            img.src = imgUrl;
+            img.alt = content.title;
+            img.className = 'w-full h-full object-cover';
+
+            const overlay = document.createElement('div');
+            overlay.className = 'absolute bottom-0 left-0 right-0 h-full bg-gradient-to-t from-black/80 via-transparent to-transparent';
+
+            const title = document.createElement('h3');
+            title.className = 'absolute bottom-4 left-4 text-lg font-medium z-30';
+            title.textContent = content.title;
+
+            card.append(img, overlay, title);
+            container.appendChild(card);
+        });
+    }
+
+    function renderTop20(contents) {
+        const container = document.getElementById('rankingCarousel');
+        container.innerHTML = '';
+        const cardWidth = 240;
+        const cardHeight = 280;
+
+        if (!contents || contents.length === 0) {
+            container.innerHTML = '<p class="text-gray-400 p-4 col-span-full">이번주 TOP 20 콘텐츠가 없습니다.</p>';
+            return;
+        }
+
+        contents.forEach((content, index) => {
+            const rank = index + 1;
+            const url = content.imageUrl || `https://via.placeholder.com/${cardWidth}x${cardHeight}?text=No+Image`;
+            const title = content.title;
+
+            const card = document.createElement('div');
+            card.className = `ranking-card relative min-w-[${cardWidth}px] h-[${cardHeight}px] rounded-xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform duration-300`;
+
+            // 숫자
+            const rankNumber = document.createElement('div');
+            rankNumber.className = 'rank-number';
+            rankNumber.innerHTML = `<span>${rank}</span>`;
+
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = `Rank ${rank}`;
+            img.style.width = cardWidth + 'px';
+            img.style.height = cardHeight + 'px';
+            img.style.objectFit = 'cover';
+            img.className = 'rounded-xl';
+
+            const overlay = document.createElement('div');
+            overlay.className = 'absolute bottom-0 left-0 right-0 h-full bg-gradient-to-t from-black/80 via-transparent to-transparent';
+
+            const titleElem = document.createElement('div');
+            titleElem.className = 'absolute bottom-4 left-4 text-sm font-medium text-white z-40 max-w-[80%] truncate';
+            titleElem.textContent = title;
+
+            card.append(img, overlay, rankNumber, titleElem);
+            container.appendChild(card);
+        });
+    }
+
+    function renderRecommendations(contents) {
+        const container = document.getElementById('contentCarousel');
+        container.innerHTML = '';
+        const defaultWidth = 400;
+        const defaultHeight = 600;
+
+        if (!contents || contents.length === 0) {
+            container.innerHTML = '<p class="text-gray-400 p-4">추천 콘텐츠가 없습니다.</p>';
+            return;
+        }
+
+        contents.forEach(content => {
+            const url = content.imageUrl || `https://via.placeholder.com/${defaultWidth}x${defaultHeight}?text=No+Image`;
+            const title = content.title;
+
+            const card = document.createElement('div');
+            card.className = `content-card relative min-w-[${defaultWidth}px] h-[${defaultHeight}px] rounded-xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform duration-300`;
+
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = content.title;
+            img.className = 'w-full h-full object-cover';
+
+            const overlay = document.createElement('div');
+            overlay.className = 'absolute bottom-0 left-0 right-0 h-full bg-gradient-to-t from-black/80 via-transparent to-transparent';
+
+            const titleElem = document.createElement('h3');
+            titleElem.className = 'absolute bottom-4 left-4 text-lg font-medium z-30';
+            titleElem.textContent = title;
+
+            card.append(img, overlay, titleElem);
+            container.appendChild(card);
+        });
+    }
+
+    fetchAndRenderContents();
+});
 </script>
 
 </body>
